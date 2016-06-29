@@ -1,0 +1,70 @@
+<template name="docItem">
+  <div class="container top-margin">
+		<div class="row">
+			<div class="col-md-12">{{> docMeta }}</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">{{> editingUsers }}</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">{{> editor }}</div>
+			<div class="col-md-6">{{> viewer }}</div>
+		</div>
+		{{> commentList }}
+		{{> insertCommentForm }}
+	</div>
+</template>
+
+<template name="editor">
+	{{> sharejsCM docid=docid onRender=config id="editor" }}
+</template>
+
+<template name="viewer">
+	<iframe src="" frameborder="0" id="viewer_iframe"></iframe>
+</template>
+
+<template name="editingUsers">
+	Editors:
+	<ul>
+	{{ #each users }}
+		<li>
+			<span class="label label-info">{{ firstname }} {{ lastname }}</span>
+		</li>
+	{{ /each }}
+	</ul>
+</template>
+
+<template name="docMeta">
+	{{ #with document }}
+		<span class="h1">{{> editableText collection="documents" field="title" }}</span>
+		{{ #if canEdit }}
+		<div class="checkbox">
+			<label>
+				<input type="checkbox" class="js-toggle-private"/>Private
+			</label>
+		</div>
+		{{ /if }}
+	{{ /with }}
+</template>
+
+<template name="insertCommentForm">
+  {{ #autoForm collection="Comments" id="insertCommentForm" type="method" meteormethod="addComment" }}
+  <fieldset>
+    <legend>Comment</legend>
+    {{> afQuickField name='title' }}
+    {{> afQuickField name='body' rows=6 placeholder='Add a comment' }}
+    {{> afQuickField name='docid' rows=6 value=docid type='hidden' }}
+  </fieldset>
+  <button type="submit" class="btn btn-primary">Add Comment</button>
+  {{ /autoForm }}
+</template>
+
+<template name="commentList">
+	<ul>
+		{{ #each comments }}
+		<li>{{ title }}
+			<p>{{ body }}</p>
+		</li>
+		{{ /each }}
+	</ul>
+</template>
